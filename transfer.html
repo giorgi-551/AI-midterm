@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academic Program Transfer Planner</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f6f9;margin:40px}
+.container{max-width:1200px;margin:auto}
+.card{background:white;padding:20px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.1);margin-bottom:25px}
+h1,h2{color:#1f4e79}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ddd;padding:10px}
+th{background:#1f4e79;color:white}
+tr:nth-child(even){background:#f8f8f8}
+button,select{padding:10px;font-size:16px}
+#equivalencySection{display:none}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="card">
+<h1>Academic Program Transfer Planner</h1>
+<h2>Current Program: Computer Science</h2>
+</div>
+
+<div class="card">
+<h2>Transcript Courses</h2>
+<table>
+<thead><tr><th>Course</th><th>Passed</th></tr></thead>
+<tbody id="courseBody"></tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Select Target Program</h2>
+<select id="programSelect">
+<option>Computer Engineering</option>
+<option>Civil Engineering</option>
+<option>Electrical and Electronics Engineering</option>
+</select>
+<button onclick="transfer()">Transfer</button>
+</div>
+
+<div class="card" id="equivalencySection">
+<h2>Equivalency Table</h2>
+<p id="selectedProgram"></p>
+<table>
+<thead><tr><th>Your Program Course (Completed)</th><th>Equivalent Course</th></tr></thead>
+<tbody id="eqBody"></tbody>
+</table>
+</div>
+</div>
+
+<script>
+const courses=[
+{name:"Calculus I (ENG)",passed:true},
+{name:"Computer Organization (ENG)",passed:true},
+{name:"Computer and Data Networks (ENG)",passed:false},
+{name:"Computer and Society (ENG)",passed:true},
+{name:"Cyberlaw and Ethics (ENG)",passed:true},
+{name:"English Language Course C1-1 (ENG)",passed:true},
+{name:"English Language Course C1-2 (ENG)",passed:true},
+{name:"Functional Programming (ENG)",passed:false},
+{name:"Introduction to Programming (ENG)",passed:true},
+{name:"Mathematical Foundation of Computing (ENG)",passed:false},
+{name:"Object Oriented Programming (ENG)",passed:true},
+{name:"Programming Languages (ENG)",passed:true},
+{name:"Web Programming (ENG)",passed:true},
+{name:"AWS Cloud Practitioner (ENG)",passed:true},
+{name:"Drones (ENG)",passed:false},
+{name:"Hardware Design and Prototyping (ENG)",passed:false},
+{name:"Introduction to Artificial Intelligence (ENG)",passed:false},
+
+{name:"Algorithms and Data Structures (ENG)",passed:true},
+{name:"Computational and Statistical Methods (ENG)",passed:true},
+{name:"Introduction to Cyber Security (ENG)",passed:true},
+{name:"Introduction to Operating Systems (ENG)",passed:true},
+{name:"Basics of Physics I (ENG)",passed:true}
+];
+
+const compEng={
+"Introduction to Programming (ENG)":"Introduction to Programming",
+"Object Oriented Programming (ENG)":"Object-Oriented Programming",
+"Computer Organization (ENG)":"Computer Architecture",
+"Algorithms and Data Structures (ENG)":"Data Structures and Algorithms",
+"Introduction to Operating Systems (ENG)":"Operating Systems",
+"Computational and Statistical Methods (ENG)":"Engineering Mathematics",
+"Basics of Physics I (ENG)":"Physics I"
+};
+
+const civil={
+"Calculus I (ENG)":"Engineering Mathematics I",
+"Basics of Physics I (ENG)":"Engineering Physics",
+"Computational and Statistical Methods (ENG)":"Engineering Mathematics",
+"English Language Course C1-1 (ENG)":"Technical English",
+"English Language Course C1-2 (ENG)":"Technical English"
+};
+
+const electrical={
+"Introduction to Programming (ENG)":"Programming Fundamentals",
+"Computer Organization (ENG)":"Digital Logic and Computer Systems",
+"Basics of Physics I (ENG)":"Physics I",
+"Computational and Statistical Methods (ENG)":"Engineering Mathematics",
+"Introduction to Cyber Security (ENG)":"Computer Networks and Security",
+"Algorithms and Data Structures (ENG)":"Algorithms"
+};
+
+function loadCourses(){
+ const body=document.getElementById("courseBody");
+ courses.forEach(c=>{
+   body.innerHTML+=`<tr><td>${c.name}</td><td>${c.passed?"Yes":"No"}</td></tr>`;
+ });
+}
+
+function getEquivalent(course,program){
+ let map={};
+ if(program==="Computer Engineering") map=compEng;
+ else if(program==="Civil Engineering") map=civil;
+ else map=electrical;
+ return map[course]||"N/A";
+}
+
+function transfer(){
+ const program=document.getElementById("programSelect").value;
+ document.getElementById("selectedProgram").innerHTML="<b>Selected Program:</b> "+program;
+ const body=document.getElementById("eqBody");
+ body.innerHTML="";
+ courses.filter(c=>c.passed).forEach(c=>{
+   body.innerHTML+=`<tr><td>${c.name}</td><td>${getEquivalent(c.name,program)}</td></tr>`;
+ });
+ document.getElementById("equivalencySection").style.display="block";
+}
+loadCourses();
+</script>
+</body>
+</html>
